@@ -2,106 +2,197 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Association Digital Self ID</title>
+  <title>Professional Digital ID</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; background: #f0f4fa; }
-    .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,.1); max-width: 600px; margin: auto; }
-    h2 { margin-top: 0; color: #1d4ed8; }
-    label { display: block; margin: 8px 0 4px; font-weight: bold; }
-    input { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 6px; }
-    button { margin-top: 12px; padding: 10px 14px; border: none; border-radius: 8px; background: #1d4ed8; color: white; cursor: pointer; }
-    #idCard { display: none; margin-top: 20px; border: 2px solid #1d4ed8; padding: 15px; border-radius: 12px; background: #e0e7ff; text-align: center; }
-    #qr { margin-top: 12px; }
-    .muted { color: #374151; font-size: 14px; }
-    .logo { width: 80px; margin-bottom: 10px; }
-    .download-btns { margin-top: 12px; display: flex; gap: 10px; justify-content: center; }
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f0f4fa;
+      display: flex;
+      justify-content: center;
+    }
+
+    .card {
+      width: 400px;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+
+    form {
+      padding: 20px;
+    }
+
+    .card-header {
+      background: #1d4ed8;
+      color: white;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+    }
+
+    .logo {
+      width: 60px;
+      height: 60px;
+      margin-right: 15px;
+    }
+
+    .header-title {
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .card-body {
+      padding: 20px;
+    }
+
+    .card-body p {
+      margin: 8px 0;
+      font-size: 16px;
+      color: #374151;
+    }
+
+    .signature {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .download-btns {
+      margin-top: 15px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    button {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 8px;
+      background: #1d4ed8;
+      color: white;
+      cursor: pointer;
+    }
+
+    label {
+      display: block;
+      margin: 8px 0 4px;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin-bottom: 10px;
+    }
   </style>
-  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
-  <div class="card">
+
+<div class="card">
+  <form id="idForm">
     <h2>Create Your Digital ID</h2>
-    <form id="idForm">
-      <label for="name">Full Name</label>
-      <input id="name" type="text" placeholder="Jane Doe" required>
-      
-      <label for="email">Email</label>
-      <input id="email" type="email" placeholder="you@example.org" required>
+    <label for="name">Full Name</label>
+    <input id="name" type="text" placeholder="Jane Doe" required>
 
-      <button type="submit">Generate Digital ID</button>
-    </form>
+    <label for="email">Email</label>
+    <input id="email" type="email" placeholder="you@example.org" required>
 
-    <div id="idCard">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg" alt="Association Logo" class="logo" id="assocLogo">
-      <h3 style="color:#1d4ed8;">Official Digital Membership ID</h3>
-      <p><strong id="outName"></strong></p>
-      <p class="muted" id="outEmail"></p>
-      <p class="muted" id="outId"></p>
-      <div id="qr"></div>
-      <div class="download-btns">
-        <button id="downloadPng">Download PNG</button>
-        <button id="downloadPdf">Download PDF</button>
+    <button type="submit">Generate Digital ID</button>
+  </form>
+
+  <div id="idCard" style="display:none;">
+    <div class="card-header">
+      <!-- Embedded Base64 logo -->
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAB/UlEQVR4nO3YwU3DMBBA0c41R/AwDJBkmKAcDZnD9mFrhE6Ej/v95bUFBQX37+p2JZkCQAAAAAAAAAAADAD8b/LP5osrVfMGh5zq7N4fxJr9ZvY+rth1uvX+j4zMGv1/r+04R8Wq3b+GxeG8ev1W86Gz1+Z+13p+5P9frk5cOx5t7G+1vP0r+OXrdjI79z1rmr6Omc7/LH4fL9r/buUvz/ox5kzzuTfrn0n8dF1/oj+k+nXpbw9ZJ+T1zR+HnlbqPOTeyG8r1zHn1PwL7/A5aP5U5t/m0/1r1+oy+fGr9fP8/PDd+f97H++3/F+rqPL+9v3+O7V4af+k+N/b/jftuD+j76f6f/bfj/yN17GvH+5MZ6w9P/wAAAAAAAAAA4Bv9AN9B6ZfLV2pNwAAAABJRU5ErkJggg==" 
+           alt="Association Logo" class="logo">
+      <div class="header-title">MESA Membership ID</div>
+    </div>
+
+    <div class="card-body">
+      <p id="outName"><strong>Name:</strong></p>
+      <p id="outEmail"><strong>Email:</strong></p>
+      <p id="outId"><strong>Member ID:</strong></p>
+
+      <div class="signature">
+        <div style="font-size:12px; color:#374151; margin-bottom:4px;">Authorized by</div>
+        <div style="font-weight:bold;">John Smith</div>
+        <div style="font-size:12px; color:#374151;">President, MESA</div>
       </div>
     </div>
+
+    <div class="download-btns">
+      <button id="downloadPng" type="button">Download PNG</button>
+      <button id="downloadPdf" type="button">Download PDF</button>
+    </div>
   </div>
+</div>
 
-  <script>
-    const form = document.getElementById('idForm');
-    const idCard = document.getElementById('idCard');
-    const qrDiv = document.getElementById('qr');
-    const downloadPng = document.getElementById('downloadPng');
-    const downloadPdf = document.getElementById('downloadPdf');
+<script>
+const form = document.getElementById('idForm');
+const idCard = document.getElementById('idCard');
+const downloadPng = document.getElementById('downloadPng');
+const downloadPdf = document.getElementById('downloadPdf');
 
-    // Generate unique member ID
-    function generateMemberId() {
-      const date = new Date();
-      const yyyymmdd = date.toISOString().slice(0,10).replace(/-/g,"");
-      const rand = Math.floor(Math.random() * 100000);
-      return `MEM-${yyyymmdd}-${rand}`;
-    }
+const usedEntries = []; // Stores {name, email}
 
-    form.addEventListener('submit', async function(e) {
-      e.preventDefault();
+function generateMemberId() {
+  const date = new Date();
+  const yyyymmdd = date.toISOString().slice(0,10).replace(/-/g,"");
+  const rand = Math.floor(Math.random() * 100000);
+  return `MEM-${yyyymmdd}-${rand}`;
+}
 
-      const name = document.getElementById('name').value;
-      const email = document.getElementById('email').value;
-      const memberId = generateMemberId();
+form.addEventListener('submit', function(e) {
+  e.preventDefault();
 
-      document.getElementById('outName').textContent = name;
-      document.getElementById('outEmail').textContent = email;
-      document.getElementById('outId').textContent = "Member ID: " + memberId;
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
 
-      const qrData = JSON.stringify({ name, email, memberId, issued: new Date().toISOString() });
-      qrDiv.innerHTML = "";
-      await QRCode.toCanvas(qrDiv, qrData, { width: 180 });
+  // Check for duplicates
+  const duplicate = usedEntries.some(entry => entry.name.toLowerCase() === name.toLowerCase() &&
+                                              entry.email.toLowerCase() === email.toLowerCase());
+  if (duplicate) {
+    alert("This Name and Email combination has already been used!");
+    return;
+  }
 
-      idCard.style.display = "block";
-    });
+  // Save entry to used list
+  usedEntries.push({ name, email });
 
-    // Download PNG
-    downloadPng.addEventListener('click', async () => {
-      const canvas = await html2canvas(idCard);
-      const link = document.createElement('a');
-      link.download = "digital-id.png";
-      link.href = canvas.toDataURL("image/png");
-      link.click();
-    });
+  const memberId = generateMemberId();
 
-    // Download PDF
-    downloadPdf.addEventListener('click', async () => {
-      const canvas = await html2canvas(idCard);
-      const imgData = canvas.toDataURL("image/png");
-      const { jsPDF } = window.jspdf;
-      const pdf = new jsPDF("p", "mm", "a4");
-      const imgProps = pdf.getImageProperties(imgData);
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-      pdf.addImage(imgData, "PNG", 10, 10, pdfWidth - 20, pdfHeight);
-      pdf.save("digital-id.pdf");
-    });
-  </script>
+  document.getElementById('outName').textContent = "Name: " + name;
+  document.getElementById('outEmail').textContent = "Email: " + email;
+  document.getElementById('outId').textContent = "Member ID: " + memberId;
+
+  idCard.style.display = "block";
+});
+
+downloadPng.addEventListener('click', async () => {
+  const canvas = await html2canvas(idCard, { scale: 2 });
+  const link = document.createElement('a');
+  link.download = "digital-id.png";
+  link.href = canvas.toDataURL("image/png");
+  link.click();
+});
+
+downloadPdf.addEventListener('click', async () => {
+  const canvas = await html2canvas(idCard, { scale: 2 });
+  const imgData = canvas.toDataURL("image/png");
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF("p", "mm", "a4");
+  const pdfWidth = pdf.internal.pageSize.getWidth() - 20;
+  const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+  pdf.addImage(imgData, "PNG", 10, 10, pdfWidth, pdfHeight);
+  pdf.save("digital-id.pdf");
+});
+</script>
+
 </body>
 </html>
